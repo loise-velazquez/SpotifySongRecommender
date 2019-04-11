@@ -5,10 +5,19 @@ import pprint
 import csv
 import Song;
 
-def populateSongFile(sp):
+def populateSongFile(sp, n):
+    """Retrieves the top n songs from the users saved
+       tracks, then grabs their IDs and populates
+       the data file
+
+    Keyword arguments:
+    sp -- the spotipy object
+    n -- the number of songs to populate
+    """
     offset = 0
+    top = n/50 # we fetch 50 songs at a time so divide n by 50
     with open('data/songs.csv', mode='w') as songs_file:
-        for x in range(5):
+        for x in range(top):
             results = sp.current_user_saved_tracks(50, offset)
 
             for item in results['items']:
@@ -22,17 +31,18 @@ def populateSongFile(sp):
         offset += 50
 
 def printSongFile(sp):
+    """Retrieves the list of songIDs from the data file
+       and prints them
+
+    Keyword arguments:
+    sp -- the spotipy object
+    """
     songIDs = []
     with open('data/songs.csv') as songs_file:
         songs_list = csv.reader(songs_file, delimiter=',')
         for row in songs_list:
             songIDs.append(row[0])
-    # results = sp.current_user_saved_tracks()
-    # for item in results['items']:
-    #     track = item['track']
-    #     print track['name'] + ' - ' + track['artists'][0]['name']
-    # results = sp.search(q='track:' + "Despacito", type='track')
-    # pprint.pprint(results)
+
     for id in songIDs :
       print sp.audio_features([id])
 
@@ -50,7 +60,7 @@ def main():
     if token:
         sp = spotipy.Spotify(auth=token)
 
-        populateSongFile(sp)
+        populateSongFile(sp, 250)
         printSongFile(sp)
 
     else:
