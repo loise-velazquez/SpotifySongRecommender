@@ -29,7 +29,7 @@ python connectSpotify.py <username>
 * **Olivia Lohe** - [GitHub](https://github.com/OliviaLohe)
 * **Nick Bigger** - [GitHub](https://github.com/nbigger)
 * **Aaron Thompson** - [GitHub](https://github.com/aroon812)
-* **Marwan Johnstone** - [GitHub](https://github.com/ashbraden1)
+* **Braden Ash** - [GitHub](https://github.com/ashbraden1)
 * **Lukas Jimenez-Smith** - [GitHub](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
 
 ## Acknowledgments
