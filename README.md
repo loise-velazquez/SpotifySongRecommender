@@ -4,7 +4,11 @@ Spotify library.
 
 ## Getting Started
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install Spotipy.
+First, use the package manager [pip](https://pip.pypa.io/en/stable/) to install Spotipy.
+Then, create a [Spotify Developer Account](https://developer.spotify.com/dashboard/login) and retrieve your
+unique client id and secret. Next, pick a redirect uri for the API to redirect to after you've been logged
+in. http://localhost/ will work fine. Set these values as enviornmental variables before you run.
+
 
 ```bash
 pip install spotipy
@@ -17,7 +21,7 @@ export SPOTIPY_REDIRECT_URI='your-app-redirect-url'
 ## Usage
 
 ```python
-python connectSpotify.py username
+python connectSpotify.py <username>
 ```
 
 ## Authors
