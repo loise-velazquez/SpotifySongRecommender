@@ -3,9 +3,33 @@ import spotipy
 import spotipy.util as util
 import pprint
 import csv
-import Song;
 
-def populateSongFile(sp, n):
+import pandas
+from sklearn import tree
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+def populate_export_csv(sp):
+    """Retrieves users top 50 songs and the corresponding
+    audio features and populates a csv to use
+
+    Keyword arguments:
+    sp -- the spotipy object
+    """
+    results = sp.current_user_saved_tracks(50)
+    songs = results['items']
+
+    ids = []
+    for i in range(len(songs)): 
+        ids.append(songs[i]['track']['id']) 
+
+    features = sp.audio_features(ids) 
+    df = pandas.DataFrame(features)
+    df.to_csv(r'data/export.csv')
+
+
+def populate_data_file(sp, n):
     """Retrieves the top n songs from the users saved
        tracks, then grabs their IDs and populates
        the data file
@@ -30,7 +54,8 @@ def populateSongFile(sp, n):
 
         offset += 50
 
-def printSongFile(sp):
+
+def get_audio_features(sp):
     """Retrieves the list of songIDs from the data file
        and prints them
 
@@ -46,6 +71,7 @@ def printSongFile(sp):
     for id in songIDs :
       print sp.audio_features([id])
 
+
 def main():
     if len(sys.argv) > 1:
         username = sys.argv[1]
@@ -60,8 +86,30 @@ def main():
     if token:
         sp = spotipy.Spotify(auth=token)
 
-        populateSongFile(sp, 250)
-        printSongFile(sp)
+        populate_export_csv(sp)
+
+        data = pandas.read_csv('data/export.csv')
+        print data.describe()
+
+        train, test = train_test_split(data, test_size=0.15)
+        print ("Train size: ", len(train))
+        print ("Test size: ", len(test))
+
+        classifier = DecisionTreeClassifier(min_samples_split=100)
+        labels = ["duration_ms", "key", "mode", "time_signature", "acousticness", "danceability", "energy", "instrumentalness", "liveness", "loudness", "speechiness", "valence", "tempo"]
+
+        # x_train = train[labels]
+        # y_train = train["target"] # we need a field to define whether the user liked the song or not
+
+        # x_test = test[labels]
+        # y_test = test["target"]
+
+        # decision_tree = classifier.fit(x_train, y_train)
+
+        # y_pred = classifier.predict(x_test)
+        # score = accuracy_score(y_test, y_pred) * 100
+
+        # print "Accuracy using decision tree: ", round(score, 1), "%"
 
     else:
         print "Can't get token for", username

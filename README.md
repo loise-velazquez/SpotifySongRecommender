@@ -12,6 +12,8 @@ in. http://localhost/ will work fine. Set these values as enviornmental variable
 
 ```bash
 pip install spotipy
+pip install sklearn
+pip install pandas
 
 export SPOTIPY_CLIENT_ID='your-spotify-client-id'
 export SPOTIPY_CLIENT_SECRET='your-spotify-client-secret'
@@ -34,4 +36,5 @@ python connectSpotify.py <username>
 
 ## Acknowledgments
 
-* Thank you to the Spotipy team for use of their product!
+* Thank you to the Spotipy team for use of their product, as well as the use of sklearn and pandas.
+* Additionally, thank you to Wes Doyle and his YouTube series on how to do machine learning in Python.
