@@ -71,6 +71,59 @@ def get_audio_features(sp):
     for id in songIDs :
       print sp.audio_features([id])
 
+def decisionTree(sp):
+  populate_export_csv(sp)
+
+  data = pandas.read_csv('data/export.csv')
+  print data.describe()
+
+  train, test = train_test_split(data, test_size=0.15)
+  print ("Train size: ", len(train))
+  print ("Test size: ", len(test))
+
+  classifier = DecisionTreeClassifier(min_samples_split=100)
+  labels = ["duration_ms", "key", "mode", "time_signature", "acousticness", "danceability", "energy", "instrumentalness", "liveness", "loudness", "speechiness", "valence", "tempo"]
+
+  # x_train = train[labels]
+  # y_train = train["target"] # we need a field to define whether the user liked the song or not
+
+  # x_test = test[labels]
+  # y_test = test["target"]
+
+  # decision_tree = classifier.fit(x_train, y_train)
+
+  # y_pred = classifier.predict(x_test)
+  # score = accuracy_score(y_test, y_pred) * 100
+
+  # print "Accuracy using decision tree: ", round(score, 1), "%"
+
+def nueralNetwork(sp):
+  print "nueral network"
+
+def songSearch(sp):
+  print ""
+  songName = raw_input("Type the name of the song you would like to analyze: ")
+
+  results = sp.search(q=songName, type="track", limit=3)
+  items = results['tracks']['items']
+
+  if len(items) > 0:
+    track = items[0]
+    artist = track['artists'][0]['name']
+    song = track['name']
+    
+    print "Is", song, "by", artist, "what you were looking for?"
+    proceed = raw_input("(y/n) ")
+    proceed = proceed.lower() 
+
+    if proceed == "y":
+      print ""
+
+    elif proceed == "n":
+      print ""
+
+  else:
+    print "Sorry, we couldn't find that song."
 
 def main():
     if len(sys.argv) > 1:
@@ -86,30 +139,24 @@ def main():
     if token:
         sp = spotipy.Spotify(auth=token)
 
-        populate_export_csv(sp)
+        print "========== Welcome to the Spotify Library Analyzer =========="
+        print "How would you like to analyze your library?:"
+        print "[Option 1] search for a song"
+        print "[Option 2] build a decision tree"
+        print "[Option 3] construct a nueral network"
+        print ""
 
-        data = pandas.read_csv('data/export.csv')
-        print data.describe()
+        select = input("Choose an option to begin analyzing (1-3): ")
 
-        train, test = train_test_split(data, test_size=0.15)
-        print ("Train size: ", len(train))
-        print ("Test size: ", len(test))
+        switch = {
+          1: songSearch,
+          2: decisionTree,
+          3: nueralNetwork
+        }
 
-        classifier = DecisionTreeClassifier(min_samples_split=100)
-        labels = ["duration_ms", "key", "mode", "time_signature", "acousticness", "danceability", "energy", "instrumentalness", "liveness", "loudness", "speechiness", "valence", "tempo"]
-
-        # x_train = train[labels]
-        # y_train = train["target"] # we need a field to define whether the user liked the song or not
-
-        # x_test = test[labels]
-        # y_test = test["target"]
-
-        # decision_tree = classifier.fit(x_train, y_train)
-
-        # y_pred = classifier.predict(x_test)
-        # score = accuracy_score(y_test, y_pred) * 100
-
-        # print "Accuracy using decision tree: ", round(score, 1), "%"
+        default = "Invalid Input"
+        func = switch.get(select, default)
+        func(sp)
 
     else:
         print "Can't get token for", username
