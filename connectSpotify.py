@@ -82,20 +82,36 @@ def decisionTree(sp):
   print data.describe()
   print data.shape
 
-  # train, test = train_test_split(data, test_size=0.15)
-  # print ("Train size: ", len(train))
-  # print ("Test size: ", len(test))
+  train, test = train_test_split(data, test_size=0.15)
+  print ("Train size: ", len(train))
+  print ("Test size: ", len(test))
+
+  classifier = DecisionTreeClassifier(min_samples_split=100)
+  labels = ["duration_ms", "key", "mode", "time_signature", "acousticness", "danceability", "energy", "instrumentalness", "liveness", "loudness", "speechiness", "valence", "tempo"]
+
+  # x_train = train[labels]
+  # y_train = train["target"] # we need a field to define whether the user liked the song or not
+
+  # x_test = test[labels]
+  # y_test = test["target"]
+
+  # decision_tree = classifier.fit(x_train, y_train)
+
+  # y_pred = classifier.predict(x_test)
+  # score = accuracy_score(y_test, y_pred) * 100
+
+  # print "Accuracy using decision tree: ", round(score, 1), "%"
+
+def nueralNetwork(sp):
+  data = pandas.read_csv('data/data.csv', usecols = lambda column : column not in 
+["song_title" , "artist"])
+  print data.describe()
+  print data.shape
 
   X = data.drop('target',axis=1)
   y = data['target']
 
   X_train, X_test, y_train, y_test = train_test_split(X, y)
-
-  # classifier = DecisionTreeClassifier(min_samples_split=100)
-  # labels = ["duration_ms", "key", "mode", "time_signature", "acousticness", "danceability", "energy", "instrumentalness", "liveness", "loudness", "speechiness", "valence", "tempo"]
-
-  # x_train = train[labels]
-  # y_train = train["target"] # we need a field to define whether the user liked the song or not
 
   scaler = StandardScaler()
   scaler.fit(X_train)
@@ -111,19 +127,6 @@ def decisionTree(sp):
 
   print(confusion_matrix(y_test,predictions))
   print(classification_report(y_test,predictions))
-
-  # x_test = test[labels]
-  # y_test = test["target"]
-
-  # decision_tree = classifier.fit(x_train, y_train)
-
-  # y_pred = classifier.predict(x_test)
-  # score = accuracy_score(y_test, y_pred) * 100
-
-  # print "Accuracy using decision tree: ", round(score, 1), "%"
-
-def nueralNetwork(sp):
-  print "nueral network"
 
 def songSearch(sp):
   print ""
