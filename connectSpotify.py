@@ -72,15 +72,15 @@ def get_audio_features(sp):
             songIDs.append(row[0])
 
     for id in songIDs :
-      print sp.audio_features([id])
+      print (sp.audio_features([id]))
 
 def decisionTree(sp):
   populate_export_csv(sp)
 
   data = pandas.read_csv('data/data.csv', usecols = lambda column : column not in 
 ["song_title" , "artist"])
-  print data.describe()
-  print data.shape
+  print (data.describe())
+  print (data.shape)
 
   train, test = train_test_split(data, test_size=0.15)
   print ("Train size: ", len(train))
@@ -105,8 +105,8 @@ def decisionTree(sp):
 def nueralNetwork(sp):
   data = pandas.read_csv('data/data.csv', usecols = lambda column : column not in 
 ["song_title" , "artist"])
-  print data.describe()
-  print data.shape
+  print (data.describe())
+  print (data.shape)
 
   X = data.drop('target',axis=1)
   y = data['target']
@@ -129,8 +129,7 @@ def nueralNetwork(sp):
   print(classification_report(y_test,predictions))
 
 def songSearch(sp):
-  print ""
-  songName = raw_input("Type the name of the song you would like to analyze: ")
+  songName = input("Type the name of the song you would like to analyze: ")
 
   results = sp.search(q=songName, type="track", limit=3)
   items = results['tracks']['items']
@@ -140,18 +139,18 @@ def songSearch(sp):
     artist = track['artists'][0]['name']
     song = track['name']
     
-    print "Is", song, "by", artist, "what you were looking for?"
-    proceed = raw_input("(y/n) ")
+    print ("Is", song, "by", artist, "what you were looking for?")
+    proceed = input("(y/n) ")
     proceed = proceed.lower() 
 
     if proceed == "y":
-      print ""
+      print ("")
 
     elif proceed == "n":
-      print ""
+      print ("")
 
   else:
-    print "Sorry, we couldn't find that song."
+    print ("Sorry, we couldn't find that song.")
 
 def main():
     if len(sys.argv) > 1:
@@ -167,12 +166,12 @@ def main():
     if token:
         sp = spotipy.Spotify(auth=token)
 
-        print "========== Welcome to the Spotify Library Analyzer =========="
-        print "How would you like to analyze your library?:"
-        print "[Option 1] search for a song"
-        print "[Option 2] build a decision tree"
-        print "[Option 3] construct a nueral network"
-        print ""
+        print ("========== Welcome to the Spotify Library Analyzer ==========")
+        print ("How would you like to analyze your library?:")
+        print ("[Option 1] search for a song")
+        print ("[Option 2] build a decision tree")
+        print ("[Option 3] construct a nueral network")
+        print ("")
 
         select = input("Choose an option to begin analyzing (1-3): ")
 
@@ -182,12 +181,17 @@ def main():
           3: nueralNetwork
         }
 
-        default = "Invalid Input"
-        func = switch.get(select, default)
-        func(sp)
+        if select == '1':
+          songSearch(sp)
+        elif select == '2':
+          decisionTree(sp)
+        elif select == '3':
+          nueralNetwork(sp)
+        else:
+          print ("Invalid input")
 
     else:
-        print "Can't get token for", username
+        print ("Can't get token for", username)
 
 if __name__ == "__main__":
     main()
