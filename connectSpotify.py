@@ -87,7 +87,8 @@ def decisionTree(sp):
   print ("Test size: ", len(test))
 
   classifier = DecisionTreeClassifier(min_samples_split=100)
-  labels = ["duration_ms", "key", "mode", "time_signature", "acousticness", "danceability", "energy", "instrumentalness", "liveness", "loudness", "speechiness", "valence", "tempo"]
+  labels = ["duration_ms", "key", "mode", "time_signature", "acousticness", 
+            "danceability", "energy", "instrumentalness", "liveness", "loudness", "speechiness", "valence", "tempo"]
 
   # x_train = train[labels]
   # y_train = train["target"] # we need a field to define whether the user liked the song or not
