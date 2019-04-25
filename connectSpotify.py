@@ -135,8 +135,8 @@ def songSearch(sp):
   results = sp.search(q=songName, type="track", limit=3)
   items = results['tracks']['items']
 
-  if len(items) > 0:
-    track = items[0]
+  for i in range(0, 3):
+    track = items[i]
     artist = track['artists'][0]['name']
     song = track['name']
     
@@ -145,13 +145,9 @@ def songSearch(sp):
     proceed = proceed.lower() 
 
     if proceed == "y":
-      print ("")
+      return track
 
-    elif proceed == "n":
-      print ("")
-
-  else:
-    print ("Sorry, we couldn't find that song.")
+  print ("Sorry, we couldn't find that song.")
 
 def main():
     if len(sys.argv) > 1:
