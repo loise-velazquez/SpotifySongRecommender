@@ -1,5 +1,5 @@
 # SpotifySongRecommender
-This is an implementation of a nueral network to create better playlists based on training data supplied from a users
+This is an implementation of a neural network to create better playlists based on training data supplied from a users
 Spotify library.
 
 ## Getting Started
