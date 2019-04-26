@@ -11,7 +11,10 @@ in. http://localhost/ will work fine. Set these values as enviornmental variable
 
 
 ```bash
+<<<<<<< HEAD
 brew install python3
+=======
+>>>>>>> b0ac4dfd4dd407ab499d522db8a6bda9298d7463
 pip3 install spotipy
 pip3 install sklearn
 pip3 install pandas
