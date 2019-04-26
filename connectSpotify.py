@@ -3,6 +3,7 @@ import spotipy
 import spotipy.util as util
 import pprint
 import csv
+import warnings
 
 import pandas
 from sklearn import tree
@@ -75,10 +76,18 @@ def get_audio_features(sp):
       print (sp.audio_features([id]))
 
 def decisionTree(sp):
+  """Constructs a decision tree and prints information
+     about its accuracy
+
+    Keyword arguments:
+    sp -- the spotipy object
+    """
   populate_export_csv(sp)
 
   data = pandas.read_csv('data/data.csv', usecols = lambda column : column not in 
 ["song_title" , "artist"])
+# data = pandas.read_csv('data/export.csv', usecols = lambda column : column not in 
+# ["uri" , "track_href", "analysis_url"])
   print (data.describe())
   print (data.shape)
 
@@ -90,20 +99,30 @@ def decisionTree(sp):
   labels = ["duration_ms", "key", "mode", "time_signature", "acousticness", 
             "danceability", "energy", "instrumentalness", "liveness", "loudness", "speechiness", "valence", "tempo"]
 
-  # x_train = train[labels]
-  # y_train = train["target"] # we need a field to define whether the user liked the song or not
+  x_train = train[labels]
+  y_train = train["target"] # we need a field to define whether the user liked the song or not
 
-  # x_test = test[labels]
-  # y_test = test["target"]
+  x_test = test[labels]
+  y_test = test["target"]
 
-  # decision_tree = classifier.fit(x_train, y_train)
+  decision_tree = classifier.fit(x_train, y_train)
 
-  # y_pred = classifier.predict(x_test)
-  # score = accuracy_score(y_test, y_pred) * 100
+  y_pred = classifier.predict(x_test)
+  print(confusion_matrix(y_test,y_pred))
 
-  # print "Accuracy using decision tree: ", round(score, 1), "%"
+  score = accuracy_score(y_test, y_pred) * 100
+
+  print ("Accuracy using decision tree: ", round(score, 1), "%")
+
+  return classifier
 
 def nueralNetwork(sp):
+  """Constructs a decision tree and prints information
+     about its accuracy
+
+    Keyword arguments:
+    sp -- the spotipy object
+    """
   data = pandas.read_csv('data/data.csv', usecols = lambda column : column not in 
 ["song_title" , "artist"])
   print (data.describe())
@@ -130,6 +149,12 @@ def nueralNetwork(sp):
   print(classification_report(y_test,predictions))
 
 def songSearch(sp):
+  """Allows a user to search spotify for a song and returns 
+     three options they can choose from
+
+    Keyword arguments:
+    sp -- the spotipy object
+    """
   songName = input("Type the name of the song you would like to analyze: ")
 
   results = sp.search(q=songName, type="track", limit=3)
@@ -145,7 +170,11 @@ def songSearch(sp):
     proceed = proceed.lower() 
 
     if proceed == "y":
-      return track
+      features = sp.audio_features(track['id']) 
+      df = pandas.DataFrame(features)
+      df.to_csv(f'data/song.csv')
+      return pandas.read_csv('data/song.csv', usecols = lambda column : column not in 
+                             ["uri" , "track_href", "analysis_url", "id", "type", "duration_ms"])
 
   print ("Sorry, we couldn't find that song.")
 
@@ -162,30 +191,38 @@ def main():
 
     if token:
         sp = spotipy.Spotify(auth=token)
+        select = 0
+        classifier = None
 
-        print ("========== Welcome to the Spotify Library Analyzer ==========")
-        print ("How would you like to analyze your library?:")
-        print ("[Option 1] search for a song")
-        print ("[Option 2] build a decision tree")
-        print ("[Option 3] construct a nueral network")
-        print ("")
+        while select is not '4':
+          print ("")
+          print ("========== Welcome to the Spotify Library Analyzer ==========")
+          print ("How would you like to analyze your library?:")
+          print ("[Option 1] song prediction")
+          print ("[Option 2] build a decision tree")
+          print ("[Option 3] construct a nueral network")
+          print ("[Option 4] quit")
+          print ("")
 
-        select = input("Choose an option to begin analyzing (1-3): ")
+          select = input("Choose an option to begin analyzing (1-4): ")
 
-        switch = {
-          1: songSearch,
-          2: decisionTree,
-          3: nueralNetwork
-        }
-
-        if select == '1':
-          songSearch(sp)
-        elif select == '2':
-          decisionTree(sp)
-        elif select == '3':
-          nueralNetwork(sp)
-        else:
-          print ("Invalid input")
+          if select == '1':
+            if classifier is not None:
+              test = songSearch(sp)
+              if classifier.predict(test)[0] is 1:
+                print ("I think you would like that song!")
+              else:
+                print ("I don't think you would like that song.")
+            else:
+              warnings.warn('Decision Tree or Nueral Network must be constructed before preditions can be made.')
+          elif select is '2':
+            classifier = decisionTree(sp)
+          elif select is '3':
+            nueralNetwork(sp)
+          elif select is '4':
+            print ("Exiting.")
+          else:
+            print ("Invalid input")
 
     else:
         print ("Can't get token for", username)
