@@ -11,9 +11,9 @@ in. http://localhost/ will work fine. Set these values as enviornmental variable
 
 
 ```bash
-pip install spotipy
-pip install sklearn
-pip install pandas
+pip3 install spotipy
+pip3 install sklearn
+pip3 install pandas
 
 export SPOTIPY_CLIENT_ID='your-spotify-client-id'
 export SPOTIPY_CLIENT_SECRET='your-spotify-client-secret'
@@ -23,7 +23,7 @@ export SPOTIPY_REDIRECT_URI='your-app-redirect-url'
 ## Usage
 
 ```python
-python connectSpotify.py <username>
+python3 connectSpotify.py <username>
 ```
 
 ## Authors
