@@ -172,7 +172,7 @@ def songSearch(sp):
     if proceed == "y":
       features = sp.audio_features(track['id']) 
       df = pandas.DataFrame(features)
-      df.to_csv(f'data/song.csv')
+      df.to_csv('data/song.csv')
       return pandas.read_csv('data/song.csv', usecols = lambda column : column not in 
                              ["uri" , "track_href", "analysis_url", "id", "type", "duration_ms"])
 
