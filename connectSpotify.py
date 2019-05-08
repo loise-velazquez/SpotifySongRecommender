@@ -214,7 +214,7 @@ def main():
               else:
                 print ("I don't think you would like that song.")
             else:
-              warnings.warn('Decision Tree or Nueral Network must be constructed before preditions can be made.')
+              warnings.warn('Decision Tree or Neural Network must be constructed before predictions can be made.')
           elif select is '2':
             classifier = decisionTree(sp)
           elif select is '3':
