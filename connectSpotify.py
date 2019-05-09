@@ -14,6 +14,8 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import classification_report,confusion_matrix
 from sklearn.metrics import accuracy_score
 
+from generateConstraints import recommendedSongs
+
 def populate_export_csv(sp):
     """Retrieves users top 50 songs and the corresponding
     audio features and populates a csv to use
@@ -194,14 +196,15 @@ def main():
         select = 0
         classifier = None
 
-        while select is not '4':
+        while select is not '5':
           print ("")
           print ("========== Welcome to the Spotify Library Analyzer ==========")
           print ("How would you like to analyze your library?:")
           print ("[Option 1] song prediction")
           print ("[Option 2] build a decision tree")
           print ("[Option 3] construct a nueral network")
-          print ("[Option 4] quit")
+          print ("[Option 4] generate a recommended playlist")
+          print ("[Option 5] quit")
           print ("")
 
           select = input("Choose an option to begin analyzing (1-4): ")
@@ -220,6 +223,12 @@ def main():
           elif select is '3':
             nueralNetwork(sp)
           elif select is '4':
+            if classifier is not None:
+              #cant store this yet
+              recommendedSongs(sp, classifier)
+            else:
+              warnings.warn('Decision Tree or Neural Network must be constructed before predictions can be made.')
+          elif select is '5':
             print ("Exiting.")
           else:
             print ("Invalid input")
