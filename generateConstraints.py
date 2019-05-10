@@ -20,7 +20,7 @@ def recommendedSongs(sp, classifier):
         data = pandas.read_csv(
             'data/data.csv', usecols=lambda column: column in ["song_title", "artist"])
         rows = data.shape[0]
-        recommendedSongs = []
+        songList = []
         
         
         for counter in range(0,50):
@@ -41,19 +41,9 @@ def recommendedSongs(sp, classifier):
                         song = pandas.read_csv('data/song.csv', usecols=lambda column: column not in
                                         ["uri", "track_href", "analysis_url", "id", "type", "duration_ms"])
                         
-                        #print("hello")
                         prediction = classifier.predict(song)[0]
-                        print(type(prediction))
                         if int(prediction) is 1:
-                                print("spaghetti")
-                                recommendedSongs.append(track)
-                        else:
-                                print("if Olob battled Thanos Olob would win")
-
-                        
-        print(len(recommendedSongs))
-        for i in range(0,len(recommendedSongs)-1):
-                print(recommendedSongs[i])
-        return recommendedSongs
+                                songList.append(track)
+        return songList
         
         
