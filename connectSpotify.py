@@ -11,6 +11,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPClassifier
+from sklearn.ensemble import BaggingClassifier
 from sklearn.metrics import classification_report,confusion_matrix
 from sklearn.metrics import accuracy_score
 
@@ -150,6 +151,48 @@ def nueralNetwork(sp):
   print(confusion_matrix(y_test,predictions))
   print(classification_report(y_test,predictions))
 
+def baggingClassifier(sp):
+  """Constructs a bagging classifier and prints information
+     about its accuracy
+
+    Keyword arguments:
+    sp -- the spotipy object
+    """
+  data = pandas.read_csv('data/data.csv', usecols = lambda column : column not in 
+  ["song_title" , "artist"])
+
+  X = data.drop('target',axis=1)
+  y = data['target']
+
+  X_train, X_test, y_train, y_test = train_test_split(X, y)
+
+  scaler = StandardScaler()
+  scaler.fit(X_train)
+  StandardScaler(copy=True, with_mean=True, with_std=True)
+
+  X_train = scaler.transform(X_train)
+  X_test = scaler.transform(X_test)
+
+# bagging classifier for ensemble of MLP and decision tree
+  #create dictionary for models
+  classifier = DecisionTreeClassifier(min_samples_split=100)
+  decision_tree = classifier.fit(X_train, y_train)
+  mlp = MLPClassifier(hidden_layer_sizes=(13,13,13),max_iter=500)
+  mlp.fit(X_train,y_train)
+
+  estimators = { decision_tree, mlp}
+  score = 0
+
+  #create bagging classifier
+  for base_estimator in estimators:
+    ensemble = BaggingClassifier(base_estimator = base_estimator)
+    ensemble = ensemble.fit(X_train, y_train)
+    predict = ensemble.predict(X_test)
+    score += ensemble.score(X_test, y_test)
+  
+
+  print("accuracy of decision tree bagging", score/2)
+
 def songSearch(sp):
   """Allows a user to search spotify for a song and returns 
      three options they can choose from
@@ -196,7 +239,7 @@ def main():
         select = 0
         classifier = None
 
-        while select is not '5':
+        while select is not '6':
           print ("")
           print ("========== Welcome to the Spotify Library Analyzer ==========")
           print ("How would you like to analyze your library?:")
@@ -204,7 +247,8 @@ def main():
           print ("[Option 2] build a decision tree")
           print ("[Option 3] construct a nueral network")
           print ("[Option 4] generate a recommended playlist")
-          print ("[Option 5] quit")
+          print("{Option 5] construct an ensemble")
+          print ("[Option 6] quit")
           print ("")
 
           select = input("Choose an option to begin analyzing (1-4): ")
@@ -229,6 +273,8 @@ def main():
             else:
               warnings.warn('Decision Tree or Neural Network must be constructed before predictions can be made.')
           elif select is '5':
+            baggingClassifier(sp)
+          elif select is '6':
             print ("Exiting.")
           else:
             print ("Invalid input")
