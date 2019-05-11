@@ -6,22 +6,61 @@ import csv
 import warnings
 import random
 
+import connectSpotify
+
 import pandas
 
-    #use spotipy to search for all of the songs
+def getRecommendedPlaylist(sp, classifier):
+        song = connectSpotify.songSearch(sp)
+        domain = recommendedSongs(sp, classifier)
+        columns = song.shape[1]
+        playLists = []
 
-    # feed results int odecision tree or neural network
+        print(song)
 
-    #if song prediction = 1, add that song to our lost of songs the user likes 
+        for i in range(0, 10):
+                attributes = []
+                for j in range(0, 3):
+                        index = random.randint(0, columns-1)
+                        attributes.append([index, song.iloc[0, index], song.columns[index]])
+                newPlayList = backTracking(song, domain, attributes)
 
-    #next do constraint satisfaction stuff
+def backTracking(song, domain, attributes):
+        playListLength = 5
+        playList = []
+        
+        for i in range(0,len(domain[0])-1):
+                if len(playList) >= 5:
+                        return playList
+                currentSong = domain[0][i]
+                currentTrack = domain[1][i]
+                if currentSong not in playList:
+                        if compareSongs(song, currentSong, attributes) is 1:
+                                playList.append(currentTrack)
+        return playList;
+
+def compareSongs(song1, song2, attributes):
+        print("song1")
+        """
+        print(attributes[0][2])
+        print(attributes[1][2])
+        print(attributes[2][2])
+        """
+        
+        at1 = abs(song1.loc[0][attributes[0][2]] / song2.loc[0][attributes[0][2]])
+        at2 = abs(song1.loc[0][attributes[1][2]] / song2.loc[0][attributes[1][2]])
+        at3 = abs(song1.loc[0][attributes[2][2]] / song2.loc[0][attributes[2][2]])
+
+        total = (at1+at2+at3)/3
+        print(total)
+
 
 def recommendedSongs(sp, classifier):
         data = pandas.read_csv(
             'data/data.csv', usecols=lambda column: column in ["song_title", "artist"])
         rows = data.shape[0]
         songList = []
-        
+        trackList = []
         
         for counter in range(0,50):
                 i = random.randint(0, rows-1)
@@ -43,7 +82,8 @@ def recommendedSongs(sp, classifier):
                         
                         prediction = classifier.predict(song)[0]
                         if int(prediction) is 1:
-                                songList.append(track)
-        return songList
+                                songList.append(song)
+                                trackList.append(track)
+        return [songList, trackList]
         
         

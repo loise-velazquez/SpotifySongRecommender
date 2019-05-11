@@ -15,7 +15,7 @@ from sklearn.ensemble import BaggingClassifier
 from sklearn.metrics import classification_report,confusion_matrix
 from sklearn.metrics import accuracy_score
 
-from generateConstraints import recommendedSongs
+import generateConstraints
 
 def populate_export_csv(sp):
     """Retrieves users top 50 songs and the corresponding
@@ -223,6 +223,17 @@ def songSearch(sp):
 
   print ("Sorry, we couldn't find that song.")
 
+
+def printWelcome():
+  print("__        __   _                            _          _   _            ____              _   _  __         _     _ _                               _                _")
+  print("\\ \\      / /__| | ___ ___  _ __ ___   ___  | |_ ___   | |_| |__   ___  / ___| _ __   ___ | |_(_)/ _|_   _  | |   (_) |__  _ __ __ _ _ __ _   _     / \\   _ __   __ _| |_   _ _______ _ __")
+  print(" \\ \\ /\\ / / _ \\ |/ __/ _ \\| '_ ` _ \\ / _ \\ | __/ _ \\  | __| '_ \\ / _ \\ \\___ \\| '_ \\ / _ \\| __| | |_| | | | | |   | | '_ \\| '__/ _` | '__| | | |   / _ \\ | '_ \\ / _` | | | | |_  / _ \\ '__|")
+  print("  \\ V  V /  __/ | (_| (_) | | | | | |  __/ | || (_) | | |_| | | |  __/  ___) | |_) | (_) | |_| |  _| |_| | | |___| | |_) | | | (_| | |  | |_| |  / ___ \\| | | | (_| | | |_| |/ /  __/ |")
+  print("   \\_/\\_/ \\___|_|\\___\\___/|_| |_| |_|\\___|  \\__\\___/   \\__|_| |_|\\___| |____/| .__/ \\___/ \\__|_|_|  \\__, | |_____|_|_.__/|_|  \\__,_|_|   \\__, | /_/   \\_\\_| |_|\\__,_|_|\\__, /___\\___|_|")
+  print("                                                                             |_|                    |___/                                |___/                         |___/")
+  print(" _   _                                     _     _                       _ _ _          _                            _                                          _ _ _                         ___")
+
+
 def main():
     if len(sys.argv) > 1:
         username = sys.argv[1]
@@ -241,7 +252,7 @@ def main():
 
         while select is not '6':
           print ("")
-          print ("========== Welcome to the Spotify Library Analyzer ==========")
+          printWelcome()
           print ("How would you like to analyze your library?:")
           print ("[Option 1] song prediction")
           print ("[Option 2] build a decision tree")
@@ -269,7 +280,7 @@ def main():
           elif select is '4':
             if classifier is not None:
               #cant store this yet
-              recommendedSongs(sp, classifier)
+              generateConstraints.getRecommendedPlaylist(sp, classifier)
             else:
               warnings.warn('Decision Tree or Neural Network must be constructed before predictions can be made.')
           elif select is '5':
