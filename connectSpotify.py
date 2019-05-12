@@ -190,7 +190,7 @@ def baggingClassifier(sp):
     predict = ensemble.predict(X_test)
     score += ensemble.score(X_test, y_test)
   
-
+  print(confusion_matrix(y_test,predict))
   print("accuracy of decision tree bagging", score/2)
 
 def songSearch(sp):
