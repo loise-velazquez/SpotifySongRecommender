@@ -29,15 +29,11 @@ def getRecommendedPlaylist(sp, classifier):
         printPlayList(theWinner)
         
 def printPlayList(playList):
-        print("Your recommended play list:")
+        print("YOUR RECCOMMENDED PLAYLIST:")
         for i in range(0, len(playList)):
                 songName = playList[i]['name']
                 artist = playList[i]['artists'][0]['name']
-                print(songName)
-                print(artist)
-
-                #print("name "+songName + " by " + artist)
-
+                print(songName, "by", artist)
         print()
 
 def bestPlaylist(song, playLists, sp):
