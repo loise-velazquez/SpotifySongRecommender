@@ -127,11 +127,10 @@ def getAudioFeatures(name, artist, sp):
                 features = sp.audio_features(track['id'])
 
                 df = pandas.DataFrame(features)
-                #song = df.drop(
-                    #["uri", "track_href", "analysis_url", "id", "type", "duration_ms"], axis=1)
                 df.to_csv('data/song.csv')
                 
                 song = pandas.read_csv('data/song.csv', usecols=lambda column: column not in
-                        ["uri", "track_href", "analysis_url", "id", "type", "duration_ms"])
+                       ["uri", "track_href", "analysis_url", "id", "type", "duration_ms"])
+                 
                 return [song, track];
         return None

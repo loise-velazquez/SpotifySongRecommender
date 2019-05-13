@@ -16,6 +16,7 @@ from sklearn.metrics import classification_report,confusion_matrix
 from sklearn.metrics import accuracy_score
 
 import generateConstraints
+import GraphStructure
 
 def populate_export_csv(sp):
     """Retrieves users top 50 songs and the corresponding
@@ -290,8 +291,9 @@ def main():
           print ("[Option 2] build a decision tree")
           print ("[Option 3] construct a nueral network")
           print ("[Option 4] generate a recommended playlist")
-          print("{Option 5] construct an ensemble")
-          print ("[Option 6] quit")
+          print("[Option 5] construct an ensemble")
+          print("[Option 6] generate playlist from graph structure")
+          print ("[Option 7] quit")
           print ("")
 
           select = input("Choose an option to begin analyzing (1-4): ")
@@ -318,7 +320,9 @@ def main():
           elif select is '5':
             baggingClassifier(sp)
           elif select is '6':
-            print ("Exiting.")
+            GraphStructure.runGraphMethod()
+          elif select is '7':
+            print("Exiting.")
           else:
             print ("Invalid input")
 
